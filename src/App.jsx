@@ -3,15 +3,22 @@ import PostList from "./Components/Home";
 import AddSubreddit from "./Components/AddSubreddit";
 import LoginPage from "./Components/Login";
 import FetchPostsBySubreddit from "./Components/SubredditPosts";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<PostList />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<PostList />} />
+        </Route>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/add-subreddit" element={<AddSubreddit />} />
-        <Route path="/posts/:subreddit" element={<FetchPostsBySubreddit />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/add-subreddit" element={<AddSubreddit />} />
+        </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/posts/:subreddit" element={<FetchPostsBySubreddit />} />
+        </Route>
       </Routes>
     </Router>
   );

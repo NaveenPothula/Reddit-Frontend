@@ -5,11 +5,13 @@ import { Link } from "react-router-dom";
 const AddSubreddit = () => {
   const [subredditInput, setSubredditInput] = useState(""); // State for input value
   const [subreddits, setSubreddits] = useState([]); // Initial state for existing subreddits
+  const [loading, setLoading] = useState(true);
 
   // Handler for adding a new subreddit
   const handleAddSubreddit = async (e) => {
     e.preventDefault();
     if (subredditInput.trim()) {
+      setLoading(true);
       try {
         const response = await axios.post(
           "http://localhost:4000/api/fetch-posts",
@@ -24,9 +26,11 @@ const AddSubreddit = () => {
         if (response.data.status == "success") {
           setSubreddits([...subreddits, subredditInput.trim()]);
           setSubredditInput("");
+          setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
+        setLoading(false);
         alert(error.response.data.message);
       }
     }
@@ -35,6 +39,7 @@ const AddSubreddit = () => {
   // Handler for deleting a subreddit
   const handleDelete = async (index) => {
     try {
+      setLoading(true);
       const response = await axios.delete(
         "http://localhost:4000/api/delete-posts",
         {
@@ -46,9 +51,12 @@ const AddSubreddit = () => {
       console.log(response.data.message);
       const updatedSubreddits = subreddits.filter((_, i) => i !== index);
       setSubreddits(updatedSubreddits);
+      setLoading(false);
     } catch (error) {
-      console.error(
+      setLoading(false);
+      alert(
         "Error deleting posts:",
+
         error.response ? error.response.data.message : error.message
       );
     }
@@ -67,6 +75,7 @@ const AddSubreddit = () => {
       if (response.data.status == "success") {
         console.log("fetched");
         setSubreddits(response.data.subreddits);
+        setLoading(false);
 
         console.log(subreddits.length);
       }
@@ -97,6 +106,7 @@ const AddSubreddit = () => {
           Add Subreddit
         </button>
       </form>
+      {loading && <h2>Loading...</h2>}
 
       {subreddits.length > 0 && (
         <table className="min-w-full bg-white">
@@ -140,6 +150,9 @@ const AddSubreddit = () => {
             ))}
           </tbody>
         </table>
+      )}
+      {!loading && subreddits.length == 0 && (
+        <h2>Subreddits are not added yet</h2>
       )}
     </div>
   );

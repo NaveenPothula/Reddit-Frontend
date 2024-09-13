@@ -64,20 +64,25 @@ const AddSubreddit = () => {
 
   useEffect(() => {
     const fetchSubreddits = async () => {
-      const response = await axios.get(
-        "http://localhost:4000/api/fetch-subreddits",
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/fetch-subreddits",
 
-        {
-          withCredentials: true, // Include credentials (cookies) in the request
+          {
+            withCredentials: true, // Include credentials (cookies) in the request
+          }
+        );
+        console.log(response);
+        if (response.data.status == "success") {
+          console.log("fetched");
+          setSubreddits(response.data.subreddits);
+          setLoading(false);
+
+          console.log(subreddits.length);
         }
-      );
-      console.log(response);
-      if (response.data.status == "success") {
-        console.log("fetched");
-        setSubreddits(response.data.subreddits);
+      } catch (e) {
         setLoading(false);
-
-        console.log(subreddits.length);
+        alert(e.response.data.message);
       }
     };
     fetchSubreddits();

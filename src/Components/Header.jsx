@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../Store/auth"; // Assuming you have a logout action
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -36,6 +37,12 @@ const Header = () => {
       <div className="text-lg font-semibold">
         {user ? `Welcome, ${user}` : "Loading..."}
       </div>
+      <Link
+        to="/document"
+        className="px-2 py-2 bg-red-500 rounded font-semibold"
+      >
+        Document
+      </Link>
       <button
         onClick={handleLogout}
         className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"

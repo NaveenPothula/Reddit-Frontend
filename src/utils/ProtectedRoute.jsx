@@ -19,8 +19,10 @@ const ProtectedRoute = () => {
         console.log(response);
         if (response.data.status === "success") {
           dispatch(setUser(response.data.user));
+          setLoading(false);
         }
       } catch (e) {
+        setLoading(false);
         console.log(e);
       } finally {
         setLoading(false); // Mark loading as false once API call completes
